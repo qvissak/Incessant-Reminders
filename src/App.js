@@ -7,18 +7,13 @@ import Footer from './components/Footer'
 import './App.css'
 
 // Component that will hold body of landing page
-const Layout = ({ children }) =>
+const App = () =>
   <div>
     <Header />
-    <main>
-      { children }
+    <main className="App">
+      <Landing />
+      <Footer />
     </main>
-    <Footer />
   </div>
-
-const App = () =>
-  <Layout>
-    <Landing />
-  </Layout>
 
 export default App
