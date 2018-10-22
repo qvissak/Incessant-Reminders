@@ -3,5 +3,9 @@ Google Chrome extension to remind you of anything for any interval of time. This
 
 ## Set up
 ```sh
-npm install -g eslint
+brew bundle
+git clone git@github.com:qvissak/Incessant-Reminders.git
+cd Incessant-Reminders/
+npm install
+npm start
 ```
