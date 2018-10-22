@@ -1,5 +1,5 @@
 import React from 'react'
-import TextField from '@material-ui/core/TextField'
+import TextBox from './TextBox'
 
 import './styles.css'
 
@@ -16,9 +16,7 @@ class Landing extends React.Component {
     // Default to 10 text field boxes on initial usage
     Array.from(Array(10), (_, i) => {
       const key = i.toString()
-      return <TextField id={key} key={key} className="Landing_item"
-        placeholder="Remind me to..." fullWidth defaultValue={this.getReminder(key)}
-        onChange={this.saveReminder}/>
+      return <TextBox nextKey={key} defaultValue={this.getReminder(key)} onChange={this.saveReminder}/>
     })
 
   getReminder = (key) => window.localStorage.getItem(key)
@@ -34,9 +32,7 @@ class Landing extends React.Component {
       const nextKey = (Number(key) + 1).toString()
       this.setState({
         textFields: this.state.textFields.concat(
-          <TextField id={nextKey} key={nextKey} className="Landing_item"
-            placeholder="Remind me to..." fullWidth defaultValue={this.getReminder(nextKey)}
-            onChange={this.saveReminder}/>
+          <TextBox nextKey={nextKey} defaultValue={this.getReminder(nextKey)} onChange={this.saveReminder}/>
         )
       })
     }
