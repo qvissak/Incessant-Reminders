@@ -12,12 +12,14 @@ class Landing extends React.Component {
     }
   }
 
-  getTextFields = () =>
-    // Default to 10 text field boxes on initial usage
-    Array.from(Array(10), (_, i) => {
+  getTextFields () {
+    // Default to at least 10 text boxes
+    const numberTextBoxesToRender = window.localStorage.length < 10 ? 10 : window.localStorage.length + 1
+    return Array.from(Array(numberTextBoxesToRender), (_, i) => {
       const key = i.toString()
-      return <TextBox nextKey={key} defaultValue={this.getReminder(key)} onChange={this.saveReminder}/>
+      return <TextBox key={key} id={key} defaultValue={this.getReminder(key)} onChange={this.saveReminder} />
     })
+  }
 
   getReminder = (key) => window.localStorage.getItem(key)
 
@@ -32,7 +34,7 @@ class Landing extends React.Component {
       const nextKey = (Number(key) + 1).toString()
       this.setState({
         textFields: this.state.textFields.concat(
-          <TextBox nextKey={nextKey} defaultValue={this.getReminder(nextKey)} onChange={this.saveReminder}/>
+          <TextBox key={nextKey} id={nextKey} defaultValue={this.getReminder(nextKey)} onChange={this.saveReminder}/>
         )
       })
     }
