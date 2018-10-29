@@ -2,6 +2,7 @@
 
 import React from 'react'
 import TextBox from './TextBox'
+import ReminderFrequency from './ReminderFrequency'
 
 import './styles.css'
 
@@ -10,11 +11,14 @@ class Landing extends React.Component {
     super(props)
 
     this.state = {
+      reminderFrequencyMinutes: this.getReminderFrequency(),
       textFields: this.getTextFields()
     }
   }
 
-  getTextFields () {
+  getReminderFrequency = () => window.localStorage.getItem('reminder_frequency') || 60
+
+  getTextFields = () => {
     // Default to at least 10 text boxes
     const numberTextBoxesToRender = window.localStorage.length < 10 ? 10 : window.localStorage.length + 1
     return Array.from(Array(numberTextBoxesToRender), (_, i) => {
@@ -31,9 +35,8 @@ class Landing extends React.Component {
     window.localStorage.setItem(reminder.target.id, reminder.target.value)
 
     // Set the reminder
-    const minutes = 1
-    chrome.alarms.create({ delayInMinutes: minutes })
-    chrome.storage.sync.set({ minutes })
+    chrome.alarms.create({ delayInMinutes: this.state.reminderFrequencyMinutes })
+    chrome.storage.sync.set({ minutes: this.state.reminderFrequencyMinutes })
 
     // If the default 10 reminders are full, add a new one
     const areRemindersFull = this.state.textFields.length === window.localStorage.length
@@ -47,9 +50,20 @@ class Landing extends React.Component {
     }
   }
 
+  updateReminderFrequency = event => {
+    const minutes = Number(event.target.value)
+    window.localStorage.setItem('reminder_frequency', minutes)
+    this.setState({
+      reminderFrequencyMinutes: minutes
+    })
+  }
+
   render = () =>
     <div className="Landing">
-      { this.state.textFields }
+      <div className="Landing_ReminderFrequency">
+        <ReminderFrequency updateTime={this.updateReminderFrequency} reminderFrequencyMinutes={this.state.reminderFrequencyMinutes} />
+      </div>
+      <div>{ this.state.textFields }</div>
     </div>
 }
 
