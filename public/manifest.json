@@ -12,7 +12,16 @@
     "48": "clock.png",
     "128": "clock.png"
   },
+  "background": {
+    "scripts": [
+      "background.js"
+    ],
+    "persistent": false
+  },
   "permissions": [
+    "alarms",
+    "notifications",
+    "storage"
   ],
   "content_security_policy": "script-src 'self' 'sha256-GgRxrVOKNdB4LrRsVPDSbzvfdV4UqglmviH9GoBJ5jk='; object-src 'self'"
 }

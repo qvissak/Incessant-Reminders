@@ -1,3 +1,5 @@
+/* global chrome */
+
 import React from 'react'
 import TextBox from './TextBox'
 
@@ -27,6 +29,11 @@ class Landing extends React.Component {
     // Save the new reminder in the local storage
     const key = reminder.target.id
     window.localStorage.setItem(reminder.target.id, reminder.target.value)
+
+    // Set the reminder
+    const minutes = 1
+    chrome.alarms.create({ delayInMinutes: minutes })
+    chrome.storage.sync.set({ minutes })
 
     // If the default 10 reminders are full, add a new one
     const areRemindersFull = this.state.textFields.length === window.localStorage.length
