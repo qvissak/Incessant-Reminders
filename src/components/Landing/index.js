@@ -11,35 +11,46 @@ class Landing extends React.Component {
     super(props)
 
     this.state = {
+      numberOfReminders: window.localStorage.length - 1,
       reminderFrequencyMinutes: this.getReminderFrequency(),
       textFields: this.getTextFields()
     }
   }
 
-  getReminderFrequency = () => window.localStorage.getItem('reminder_frequency') || 60
+  getReminderFrequency = () => {
+    if (!window.localStorage.getItem('reminder_frequency')) {
+      window.localStorage.setItem('reminder_frequency', 60)
+    }
+    return window.localStorage.getItem('reminder_frequency')
+  }
 
   getTextFields = () => {
-    // Default to at least 10 text boxes
-    const numberTextBoxesToRender = window.localStorage.length < 10 ? 10 : window.localStorage.length + 1
+    // Default to at least 5 text boxes
+    // Indexing is weird because of the 'reminder_frequency' variable
+    const numberTextBoxesToRender = window.localStorage.length - 1 < 5 ? 5 : window.localStorage.length
     return Array.from(Array(numberTextBoxesToRender), (_, i) => {
       const key = i.toString()
       return <TextBox key={key} id={key} defaultValue={this.getReminder(key)} onChange={this.saveReminder} />
     })
   }
 
-  getReminder = (key) => window.localStorage.getItem(key)
+  getReminder = key => window.localStorage.getItem(key)
 
-  saveReminder = (reminder) => {
+  saveReminder = reminder => {
     // Save the new reminder in the local storage
     const key = reminder.target.id
-    window.localStorage.setItem(reminder.target.id, reminder.target.value)
+    window.localStorage.setItem(key, reminder.target.value)
 
-    // Set the reminder
-    chrome.alarms.create({ delayInMinutes: this.state.reminderFrequencyMinutes })
-    chrome.storage.sync.set({ minutes: this.state.reminderFrequencyMinutes })
+    // Trigger background process for first time setting a reminder
+    if (this.state.numberOfReminders <= 1 && window.localStorage.length - 1 > 0) {
+      const minutesUntilReminder = Number(window.localStorage.getItem('reminder_frequency'))
+      chrome.alarms.create(key, { delayInMinutes: minutesUntilReminder })
+    }
 
-    // If the default 10 reminders are full, add a new one
-    const areRemindersFull = this.state.textFields.length === window.localStorage.length
+    this.setState({ numberOfReminders: window.localStorage.length - 1 })
+
+    // If the default 5 reminders are full, add a new one
+    const areRemindersFull = this.state.textFields.length === window.localStorage.length - 1
     if (areRemindersFull) {
       const nextKey = (Number(key) + 1).toString()
       this.setState({
@@ -53,9 +64,8 @@ class Landing extends React.Component {
   updateReminderFrequency = event => {
     const minutes = Number(event.target.value)
     window.localStorage.setItem('reminder_frequency', minutes)
-    this.setState({
-      reminderFrequencyMinutes: minutes
-    })
+    chrome.storage.sync.set({ minutesUntilReminder: minutes })
+    this.setState({ reminderFrequencyMinutes: minutes })
   }
 
   render = () =>
