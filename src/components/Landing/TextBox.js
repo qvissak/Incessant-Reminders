@@ -1,14 +1,21 @@
 import React from 'react'
+import DeleteIcon from '@material-ui/icons/Delete'
+import IconButton from '@material-ui/core/IconButton'
 import TextField from '@material-ui/core/TextField'
 
 import './styles.css'
 
 class TextBox extends React.Component {
   render () {
-    const { id, defaultValue, onChange } = this.props
+    const { id, defaultValue, onReminderChange, onDelete } = this.props
 
-    return <TextField id={id} className="Landing_item" placeholder="Remind me to..."
-      fullWidth defaultValue={defaultValue} onChange={onChange}/>
+    return <div className="TextBox_container">
+      <TextField id={id} className="Landing_item" placeholder="Remind me to..."
+        fullWidth defaultValue={defaultValue} onChange={onReminderChange}/>
+      <IconButton onClick={onDelete}>
+        <DeleteIcon fontSize="small" />
+      </IconButton>
+    </div>
   }
 }
 

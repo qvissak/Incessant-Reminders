@@ -11,7 +11,7 @@ class Landing extends React.Component {
     super(props)
 
     this.state = {
-      numberOfReminders: window.localStorage.length - 1,
+      numberOfReminders: this.setNumberOfReminders(),
       reminderFrequencyMinutes: this.getReminderFrequency(),
       textFields: this.getTextFields()
     }
@@ -30,8 +30,13 @@ class Landing extends React.Component {
     const numberTextBoxesToRender = window.localStorage.length - 1 < 5 ? 5 : window.localStorage.length
     return Array.from(Array(numberTextBoxesToRender), (_, i) => {
       const key = i.toString()
-      return <TextBox key={key} id={key} defaultValue={this.getReminder(key)} onChange={this.saveReminder} />
+      return <TextBox key={key} id={key} defaultValue={this.getReminder(key)}
+        onReminderChange={this.saveReminder} onDelete={() => this.deleteReminder(key)} />
     })
+  }
+
+  setNumberOfReminders = () => {
+    this.setState({ numberOfReminders: window.localStorage.length - 1 })
   }
 
   getReminder = key => window.localStorage.getItem(key)
@@ -47,7 +52,7 @@ class Landing extends React.Component {
       chrome.alarms.create(key, { delayInMinutes: minutesUntilReminder })
     }
 
-    this.setState({ numberOfReminders: window.localStorage.length - 1 })
+    this.setNumberOfReminders()
 
     // If the default 5 reminders are full, add a new one
     const areRemindersFull = this.state.textFields.length === window.localStorage.length - 1
@@ -55,7 +60,8 @@ class Landing extends React.Component {
       const nextKey = (Number(key) + 1).toString()
       this.setState({
         textFields: this.state.textFields.concat(
-          <TextBox key={nextKey} id={nextKey} defaultValue={this.getReminder(nextKey)} onChange={this.saveReminder}/>
+          <TextBox key={nextKey} id={nextKey} defaultValue={this.getReminder(nextKey)}
+            onReminderChange={this.saveReminder} onDelete={() => this.deleteReminder(nextKey)} />
         )
       })
     }
@@ -66,6 +72,17 @@ class Landing extends React.Component {
     window.localStorage.setItem('reminder_frequency', minutes)
     chrome.storage.sync.set({ minutesUntilReminder: minutes })
     this.setState({ reminderFrequencyMinutes: minutes })
+  }
+
+  deleteReminder = key => {
+    // Disable deleting the last reminder to have at least one on the screen
+    if (this.state.textFields.length > 1) {
+      window.localStorage.removeItem(key)
+      this.setState({
+        numberOfReminders: window.localStorage.length - 1,
+        textFields: this.state.textFields.filter(textBox => textBox.key !== key)
+      })
+    }
   }
 
   render = () =>
