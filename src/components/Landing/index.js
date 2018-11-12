@@ -76,7 +76,8 @@ class Landing extends React.Component {
 
   deleteReminder = key => {
     // Disable deleting the last reminder to have at least one on the screen
-    if (this.state.textFields.length > 1) {
+    const keepBothBoxes = this.state.textFields.length === 2 && !!this.getReminder(this.state.textFields[0].key) && !this.getReminder(this.state.textFields[1].key) && key !== this.state.textFields[0].key
+    if (!keepBothBoxes && this.state.textFields.length > 1) {
       window.localStorage.removeItem(key)
       this.setState({
         numberOfReminders: window.localStorage.length - 1,
