@@ -11,7 +11,7 @@ class Landing extends React.Component {
     super(props)
 
     this.state = {
-      numberOfReminders: this.setNumberOfReminders(),
+      numberOfReminders: this.updateNumberOfReminders(),
       reminderFrequencyMinutes: this.getReminderFrequency(),
       textFields: this.getTextFields()
     }
@@ -24,22 +24,21 @@ class Landing extends React.Component {
     return window.localStorage.getItem('reminder_frequency')
   }
 
-  getTextFields = () => {
-    const numberTextBoxesToRender = window.localStorage.length
-    return Array.from(Array(numberTextBoxesToRender), (_, i) => {
+  getTextFields = () =>
+    Array.from(Array(window.localStorage.length), (_, i) => {
       const key = i.toString()
       return <TextBox key={key} id={key} defaultValue={this.getReminder(key)}
         onReminderChange={this.saveReminder} onDelete={() => this.deleteReminder(key)} />
     })
-  }
 
-  setNumberOfReminders = () => {
+  // Use this function asynchronously
+  updateNumberOfReminders = () => {
     this.setState({ numberOfReminders: window.localStorage.length - 1 })
   }
 
   getReminder = key => window.localStorage.getItem(key)
 
-  saveReminder = reminder => {
+  saveReminder = async reminder => {
     // Save the new reminder in the local storage
     const key = reminder.target.id
     window.localStorage.setItem(key, reminder.target.value)
@@ -50,37 +49,38 @@ class Landing extends React.Component {
       chrome.alarms.create(key, { delayInMinutes: minutesUntilReminder })
     }
 
-    this.setNumberOfReminders()
+    await this.updateNumberOfReminders()
 
-    // If the default 5 reminders are full, add a new one
-    const areRemindersFull = this.state.textFields.length === window.localStorage.length - 1
+    // Add a new reminder text box if other text boxes are full
+    const areRemindersFull = this.state.textFields.length === this.state.numberOfReminders
     if (areRemindersFull) {
-      const nextKey = (Number(key) + 1).toString()
-      this.setState({
-        textFields: this.state.textFields.concat(
+      const largestKey = this.state.textFields[this.state.textFields.length - 1].key
+      const nextKey = (Number(largestKey) + 1).toString()
+      this.setState(state => ({
+        textFields: state.textFields.concat(
           <TextBox key={nextKey} id={nextKey} defaultValue={this.getReminder(nextKey)}
             onReminderChange={this.saveReminder} onDelete={() => this.deleteReminder(nextKey)} />
         )
-      })
+      }))
     }
   }
 
-  updateReminderFrequency = event => {
+  updateReminderFrequency = async event => {
     const minutes = Number(event.target.value)
     window.localStorage.setItem('reminder_frequency', minutes)
     chrome.storage.sync.set({ minutesUntilReminder: minutes })
-    this.setState({ reminderFrequencyMinutes: minutes })
+    await this.setState({ reminderFrequencyMinutes: minutes })
   }
 
-  deleteReminder = key => {
+  deleteReminder = async key => {
     // Disable deleting the last empty reminder text field
     const isNotLastEmptyBox = key !== this.state.textFields[this.state.textFields.length - 1].key
     if (isNotLastEmptyBox) {
       window.localStorage.removeItem(key)
-      this.setState({
+      await this.setState(state => ({
         numberOfReminders: window.localStorage.length - 1,
-        textFields: this.state.textFields.filter(textBox => textBox.key !== key)
-      })
+        textFields: state.textFields.filter(textBox => textBox.key !== key)
+      }))
     }
   }
 
