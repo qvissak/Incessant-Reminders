@@ -25,9 +25,7 @@ class Landing extends React.Component {
   }
 
   getTextFields = () => {
-    // Default to at least 5 text boxes
-    // Indexing is weird because of the 'reminder_frequency' variable
-    const numberTextBoxesToRender = window.localStorage.length - 1 < 5 ? 5 : window.localStorage.length
+    const numberTextBoxesToRender = window.localStorage.length
     return Array.from(Array(numberTextBoxesToRender), (_, i) => {
       const key = i.toString()
       return <TextBox key={key} id={key} defaultValue={this.getReminder(key)}
@@ -75,9 +73,9 @@ class Landing extends React.Component {
   }
 
   deleteReminder = key => {
-    // Disable deleting the last reminder to have at least one on the screen
-    const keepBothBoxes = this.state.textFields.length === 2 && !!this.getReminder(this.state.textFields[0].key) && !this.getReminder(this.state.textFields[1].key) && key !== this.state.textFields[0].key
-    if (!keepBothBoxes && this.state.textFields.length > 1) {
+    // Disable deleting the last empty reminder text field
+    const isNotLastEmptyBox = key !== this.state.textFields[this.state.textFields.length - 1].key
+    if (isNotLastEmptyBox) {
       window.localStorage.removeItem(key)
       this.setState({
         numberOfReminders: window.localStorage.length - 1,
