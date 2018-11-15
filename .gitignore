@@ -33,6 +33,9 @@ bower_components
 # Production directory
 build/
 
+# Production bundler
+build.zip
+
 # Dependency directories
 node_modules/
 jspm_packages/

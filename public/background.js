@@ -4,7 +4,7 @@ chrome.alarms.onAlarm.addListener(() => {
   const key = String(Math.floor(Math.random() * numberOfReminders))
   chrome.notifications.create({
     type: 'basic',
-    iconUrl: 'clock.png',
+    iconUrl: 'clock_512.png',
     title: 'Remember:',
     message: window.localStorage.getItem(key),
     priority: 0
