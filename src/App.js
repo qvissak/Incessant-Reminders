@@ -7,8 +7,8 @@ import Footer from './components/Footer'
 import './App.css'
 
 // Component that will hold body of landing page
-class App extends React.Component {
-  render = () =>
+const App = () => {
+  return (
     <div>
       <Header />
       <main className="App">
@@ -16,6 +16,7 @@ class App extends React.Component {
         <Footer />
       </main>
     </div>
+  );
 }
 
 export default App

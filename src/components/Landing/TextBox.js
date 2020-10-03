@@ -5,18 +5,16 @@ import TextField from '@material-ui/core/TextField'
 
 import './styles.css'
 
-class TextBox extends React.Component {
-  render () {
-    const { id, defaultValue, onReminderChange, onDelete } = this.props
-
-    return <div className="TextBox_container">
+const TextBox = ({ id, defaultValue, onReminderChange, onDelete }) => {
+  return (
+    <div className="TextBox_container">
       <TextField id={id} className="Landing_item" placeholder="Remind me to..."
-        fullWidth defaultValue={defaultValue} onChange={onReminderChange}/>
+        fullWidth defaultValue={defaultValue} onChange={onReminderChange} />
       <IconButton onClick={onDelete}>
         <DeleteIcon fontSize="small" />
       </IconButton>
     </div>
-  }
+  );
 }
 
 export default TextBox
