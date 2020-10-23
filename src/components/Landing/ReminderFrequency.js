@@ -3,14 +3,13 @@ import TextField from '@material-ui/core/TextField'
 
 import './styles.css'
 
-class ReminderFrequency extends React.Component {
-  render = () => {
-    const { updateTime, reminderFrequencyMinutes } = this.props
-    const incorrectInput = reminderFrequencyMinutes <= 0
-    const errorMessage = 'Please enter a number greater than 0.'
-    const directions = 'How frequently (in minutes) do you want to be reminded?'
+const ReminderFrequency = ({ updateTime, reminderFrequencyMinutes }) => {
+  const incorrectInput = reminderFrequencyMinutes <= 0
+  const errorMessage = 'Please enter a number greater than 0.'
+  const directions = 'How frequently (in minutes) do you want to be reminded?'
 
-    return <TextField
+  return (
+    <TextField
       label="Reminder Frequency"
       value={reminderFrequencyMinutes}
       onChange={updateTime}
@@ -22,7 +21,7 @@ class ReminderFrequency extends React.Component {
       margin="none"
       variant="outlined"
     />
-  }
+  );
 }
 
 export default ReminderFrequency
