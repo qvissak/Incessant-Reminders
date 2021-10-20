@@ -14,6 +14,13 @@ npm install
 npm run build
 ```
 
+## Update npm Packages
+
+```sh
+ncu --upgrade
+npm i
+```
+
 ## Release
 
 After completing these steps, navigate to the [Chrome Web Store Developer Dashboard](https://chrome.google.com/webstore/developer/dashboard), log in, and publish the extension using `build.zip`.
