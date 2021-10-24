@@ -21,7 +21,7 @@ const ReminderFrequency = ({ updateTime, reminderFrequencyMinutes }) => {
       margin="none"
       variant="outlined"
     />
-  );
+  )
 }
 
 export default ReminderFrequency
