@@ -2,6 +2,8 @@
 
 Google Chrome extension to remind you of anything for any interval of time. This extension is perfect if you want to be given gentle reminders of little things to aid in the completion of your goals.
 
+[![Maintainability](https://api.codeclimate.com/v1/badges/7ab50c695ee2e7ef4027/maintainability)](https://codeclimate.com/github/qvissak/Incessant-Reminders/maintainability)
+
 ## Set up
 
 After completing these steps, navigate to your [chrome extensions settings](chrome://extensions/) and enable developer mode. Select `Load unpacked` and select this folder: `Incessant-Reminders/build/`.
