@@ -7,7 +7,7 @@ import ReminderFrequency from './ReminderFrequency'
 import './styles.css'
 
 class Landing extends React.Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
 
     this.state = {
@@ -31,7 +31,7 @@ class Landing extends React.Component {
   getTextFields = () =>
     Array.from(Array(window.localStorage.length), (_, i) => {
       const key = i.toString()
-      return getTextBoxComponent(key)
+      return this.getTextBoxComponent(key)
     })
 
   // Use this function asynchronously
@@ -60,7 +60,7 @@ class Landing extends React.Component {
       const largestKey = this.state.textFields[this.state.textFields.length - 1].key
       const nextKey = (Number(largestKey) + 1).toString()
       this.setState(state => ({
-        textFields: state.textFields.concat(getTextBoxComponent(nextKey))
+        textFields: state.textFields.concat(this.getTextBoxComponent(nextKey))
       }))
     }
   }
