@@ -7,7 +7,7 @@ import ReminderFrequency from './ReminderFrequency'
 import './styles.css'
 
 class Landing extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
 
     this.state = {
@@ -24,11 +24,14 @@ class Landing extends React.Component {
     return window.localStorage.getItem('reminder_frequency')
   }
 
+  getTextBoxComponent = (key) => <TextBox key={key} id={key}
+    defaultValue={this.getReminder(key)} onReminderChange={this.saveReminder}
+    onDelete={() => this.deleteReminder(key)} />
+
   getTextFields = () =>
     Array.from(Array(window.localStorage.length), (_, i) => {
       const key = i.toString()
-      return <TextBox key={key} id={key} defaultValue={this.getReminder(key)}
-        onReminderChange={this.saveReminder} onDelete={() => this.deleteReminder(key)} />
+      return getTextBoxComponent(key)
     })
 
   // Use this function asynchronously
@@ -57,10 +60,7 @@ class Landing extends React.Component {
       const largestKey = this.state.textFields[this.state.textFields.length - 1].key
       const nextKey = (Number(largestKey) + 1).toString()
       this.setState(state => ({
-        textFields: state.textFields.concat(
-          <TextBox key={nextKey} id={nextKey} defaultValue={this.getReminder(nextKey)}
-            onReminderChange={this.saveReminder} onDelete={() => this.deleteReminder(nextKey)} />
-        )
+        textFields: state.textFields.concat(getTextBoxComponent(nextKey))
       }))
     }
   }
@@ -89,7 +89,7 @@ class Landing extends React.Component {
       <div className="Landing_ReminderFrequency">
         <ReminderFrequency updateTime={this.updateReminderFrequency} reminderFrequencyMinutes={this.state.reminderFrequencyMinutes} />
       </div>
-      <div>{ this.state.textFields }</div>
+      <div>{this.state.textFields}</div>
     </div>
 }
 
