@@ -14,7 +14,7 @@ const TextBox = ({ id, defaultValue, onReminderChange, onDelete }) => {
         <DeleteIcon fontSize="small" />
       </IconButton>
     </div>
-  );
+  )
 }
 
 export default TextBox

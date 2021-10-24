@@ -16,7 +16,7 @@ const App = () => {
         <Footer />
       </main>
     </div>
-  );
+  )
 }
 
 export default App
